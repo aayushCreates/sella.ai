@@ -1,4 +1,5 @@
 import { claudeClient } from "../config/claude.config";
+import { geminiClient } from "../config/gemini.config";
 
 function buildPrompt(products: any, allReviews: any, category: any) {
   const productSummaries = products
@@ -104,6 +105,33 @@ export async function getAiAnalyzedMarketData(
       .filter((c) => c.type === "text")
       .map((c) => c.text)
       .join("");
+    const clean = raw.replace(/^```json\n?|```$/g, "").trim();
+
+    return JSON.parse(clean);
+  } catch (err) {
+    console.log("Claude failed, falling back to Gemini:", err);
+    return await getMarketAnalyzerFallbackData(products, allReviews, category);
+  }
+}
+
+export async function getMarketAnalyzerFallbackData(
+  products: any,
+  allReviews: any,
+  category: any,
+) {
+  try {
+    const prompt = buildPrompt(products, allReviews, category);
+
+    const res = await geminiClient.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        systemInstruction:
+          "You are a world-class Amazon market analyst. Analyze product and review data and return ONLY valid JSON — no markdown, no preamble, no backticks. Return exactly the JSON structure requested.",
+      },
+    });
+
+    const raw = res.text || "";
     const clean = raw.replace(/^```json\n?|```$/g, "").trim();
 
     return JSON.parse(clean);

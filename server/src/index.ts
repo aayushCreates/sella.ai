@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { errorHandler } from "./utils/error.utils";
 import authRoutes from "./routes/auth.routes";
 import scrapeRouter from "./routes/scraper.routes";
+import analyzerRouter from "./routes/analyzer.routes";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(morgan("dev"));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/scrape", scrapeRouter);
+app.use("/api/v1/analyze", analyzerRouter);
 
 app.use(errorHandler);
 

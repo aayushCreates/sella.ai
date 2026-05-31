@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import { errorHandler } from "./utils/error.utils";
+import authRoutes from "./routes/auth.routes";
+import scrapeRouter from "./routes/scraper.routes";
 
 dotenv.config();
 
@@ -12,7 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-app.use("/api/v1/auth/");
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/scrape", scrapeRouter);
 
 app.use(errorHandler);
 

@@ -1,10 +1,10 @@
-import { anakinClient } from "../config/anakin.config";
+import { anakinClient } from "../config/scraper.config";
 import {
   ScrapeOptions,
   ScrapeJobResponse,
   PollResponse,
   BatchScrapeResult,
-} from "../types/anakin.types";
+} from "../types/scraper.types";
 import { sleep } from "../utils/sleep.utils";
 
 export const ScraperService = {
